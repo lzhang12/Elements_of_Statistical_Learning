@@ -18,6 +18,7 @@ from scipy.stats import multivariate_normal
 from importlib import resources
 
 np.random.seed(0)
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 plt.style.use('../utils/default_plot_style.mplstyle')
 
 SAVE_FIGURE = False
@@ -141,7 +142,6 @@ k = 1
 knn = KNeighborsClassifier(n_neighbors=k).fit(X, Y)
 title = '{}-Nearest Neighbor Classifier'.format(k)
 plot_decision_boundary(knn, X, Y, xlim=[-3, 4], ylim=[-3, 4], title=title, is_save=SAVE_FIGURE)
-plt.show()
 
 # Bayesian
 class BayesianClassifier(object):
