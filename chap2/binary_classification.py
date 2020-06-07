@@ -3,7 +3,7 @@ Binary Classification by Linear Regression and K-Nearest-Neighbor
 in Chapter 2 of The Elements of Statistical Learning
 
 author: zl
-update: 20200604
+update: 20200606
 """
 
 #%% import
@@ -14,18 +14,20 @@ from matplotlib.colors import ListedColormap
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
+from scipy.stats import multivariate_normal
+from importlib import resources
 
 np.random.seed(0)
-plt.style.use('./utils/default_plot_style.mplstyle')
+plt.style.use('../utils/default_plot_style.mplstyle')
 
-SAVE_FIGURE = True
+SAVE_FIGURE = False
 DPI = 300
-DIR_FIGURE = './figure'
+DIR_FIGURE = '../figure'
 CHAPTER = 'ch2'
 PROBLEM = 'binary_class'
 
 #%% data generation
-def sample_generator(N, mean=None, n_mean=10, var_reduce=0.2):
+def sample_generator(N, mean=None, n_mean=10, var=0.2):
     """
     Generate binary (blue=0, orange=1) samples
         - equal number of sample each class
@@ -37,9 +39,9 @@ def sample_generator(N, mean=None, n_mean=10, var_reduce=0.2):
         n_mean = number of means
 
     Return:
-        X = samples of dimension (2*N, 2)
-        Y = labels of dimension (2*N, )
-        mean = mean values of the points for generating samples
+        X = sample data points, shape = (2*N, 2)
+        Y = class labels, 0=blue, 1=orange, shape = (2*N, )
+        mean = mean values of the points to generate sample data
     """
 
     I = np.identity(2)
@@ -55,7 +57,7 @@ def sample_generator(N, mean=None, n_mean=10, var_reduce=0.2):
     for y, m in class_.items():
         for _ in range(N):
             mk = m[np.random.choice(n_mean)]
-            x = np.random.multivariate_normal(mean=mk, cov=var_reduce*I, size=1)
+            x = np.random.multivariate_normal(mean=mk, cov=var*I, size=1)
             X.append(x)
             Y.append(y)
 
@@ -92,7 +94,9 @@ def plot_obs(X, Y, xlim=None, ylim=None, ax=None, is_save=False, dpi=300):
     return fig, ax
 
 N = 100
-X, Y, mean = sample_generator(N)
+N_MEAN = 10
+VAR = 0.2
+X, Y, mean = sample_generator(N, n_mean=N_MEAN, var=VAR)
 fig, ax = plot_obs(X, Y, xlim=[-3, 4], ylim=[-3, 4])
 
 #%% Binary classification model
@@ -137,11 +141,44 @@ k = 1
 knn = KNeighborsClassifier(n_neighbors=k).fit(X, Y)
 title = '{}-Nearest Neighbor Classifier'.format(k)
 plot_decision_boundary(knn, X, Y, xlim=[-3, 4], ylim=[-3, 4], title=title, is_save=SAVE_FIGURE)
+plt.show()
+
+# Bayesian
+class BayesianClassifier(object):
+    """
+    Bayesian classifier using the data generator
+    """
+    def __init__(self, n_class, mean, var):
+        self.n_class = n_class
+        self.mean = mean
+        self.cov = var*np.identity(n_class)
+
+    def Pr(self, X):
+        """
+        Compute probability of each class
+        """
+        p = np.zeros((X.shape[0], self.n_class))
+        for i in range(self.n_class):
+            for m in self.mean[i]:
+                p[:,i] += multivariate_normal.pdf(X, mean=m, cov=self.cov)
+        return p
+
+    def predict(self, X):
+        """
+        Make prediction
+        """
+        Y = np.argmax(self.Pr(X), axis=1)
+        return Y
+
+bayes = BayesianClassifier(2, mean, VAR)
+title = 'Bayesian Classifier'
+plot_decision_boundary(bayes, X, Y, xlim=[-3, 4], ylim=[-3, 4], title=title, is_save=SAVE_FIGURE)
+plt.show()
 
 #%% Test Error vs k
-def plot_knn_err(kk, train_err, test_err, lin_train_err=None, lin_test_err=None, is_save=False):
+def plot_knn_err(kk, train_err, test_err, lin_train_err=None, lin_test_err=None, bayes_err=None, is_save=False):
     """
-    Plot test and training error for different number of nearest neighbors
+    Plot test and training error for different degrees of freedoms and number of nearest neighbors
     """
 
     fig, ax = plt.subplots(1, 1)
@@ -153,9 +190,8 @@ def plot_knn_err(kk, train_err, test_err, lin_train_err=None, lin_test_err=None,
     ax.set_xticks(kk[::2])
     ax.set_xticklabels(kk[::2])
     ax.set_xlabel(r'$k$ - numebr of nearest neighbors')
-    ax.set_ylabel('error')
+    ax.set_ylabel('Error')
     ax.minorticks_off()
-    ax.legend()
 
     dof = (2*N/kk).astype(np.int)
     ax2 = ax.twiny()
@@ -166,21 +202,28 @@ def plot_knn_err(kk, train_err, test_err, lin_train_err=None, lin_test_err=None,
     ax2.set_xlabel(r'degree of freedoms $N/k$')
     ax2.minorticks_off()
 
+    if lin_train_err:
+        xlin = 70
+        ax.plot(xlin, lin_train_err, 's', color='C0', markersize=8)
+        ax.plot(xlin, lin_test_err, 's', color='C1', markersize=8)
+        ax.text(xlin, lin_test_err+0.01, 'linear', ha='center', va='bottom')
+
+    if bayes_err:
+        xlim = ax.get_xlim()
+        ax.plot(xlim, [bayes_err]*2, 'k--', label='Bayes')
+
+    ax.legend(loc='best')
+
     if is_save == True:
         fn = os.path.join(DIR_FIGURE, '_'.join([CHAPTER, PROBLEM, 'knn_err']))
         plt.savefig(fn, dpi=DPI)
-
-    xlin = 70
-    ax.plot(xlin, lin_train_err, 's', color='C0', markersize=8)
-    ax.plot(xlin, lin_test_err, 's', color='C1', markersize=8)
-    ax.text(xlin, lin_test_err+0.01, 'linear', ha='center', va='bottom')
 
     return fig, ax
 
 
 X_test, Y_test, _ = sample_generator(5000, mean)
 
-kk = np.unique(np.logspace(0, np.log10(200), num=20).astype(np.int))
+kk = np.unique(np.logspace(0, np.log10(151), num=20).astype(np.int))
 knn_train_err = []
 knn_test_err = []
 for k in kk:
@@ -193,5 +236,7 @@ for k in kk:
 lin_train_err = 1 - accuracy_score(Y, reg.predict(X)>0.5)
 lin_test_err = 1 - accuracy_score(Y_test, reg.predict(X_test)>0.5)
 
-plot_knn_err(kk, knn_train_err, knn_test_err, lin_train_err, lin_test_err, is_save=SAVE_FIGURE)
+bayes_err = 1 - accuracy_score(Y_test, bayes.predict(X_test))
+
+plot_knn_err(kk, knn_train_err, knn_test_err, lin_train_err, lin_test_err, bayes_err, is_save=True)
 plt.show()
