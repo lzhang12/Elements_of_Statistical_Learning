@@ -1,4 +1,4 @@
-# Python for EPL
+# Python for ESL
 **Python Implementation and Exercise Solution of "The Elements of Statistical Learning" by _Trevor Hastie, Robert Tibshirani, Jerome Friedman_ (2nd Ed.)**
 
 ## Outline
