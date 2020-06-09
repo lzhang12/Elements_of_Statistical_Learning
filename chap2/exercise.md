@@ -1,6 +1,12 @@
 # Exercise of Chapter 2
 
-**Ex. 2.1**
+$$
+\def\Ep#1#2{\mathrm{E}_{#1}\left[{#2}\right]}
+\def\bm#1{\boldsymbol{#1}}
+\def\argmin#1#2{\mathrm{argmin}_{#1}\left[{#2}\right]}
+$$
+
+#### Ex. 2.1
 Suppose each of K-classes has an associated target $t_k$, which is a vector of all zeros, except a one in the $k$th position. Show that classifying to the largest element of $\hat{y}$ amounts to choosing the closest target, $\text{min}_k ||t_k − \hat{y}||$, if the elements of $\hat{y}$ sum to one.
 
 
@@ -12,7 +18,9 @@ Suppose each of K-classes has an associated target $t_k$, which is a vector of a
 & = \text{argmax}_k \hat{y}_k \end{aligned}$$
 > Note that $\sum\limits_i \hat{y}_i = 1$ is not necessary.
 
-**Ex. 2.2**
+
+
+#### Ex. 2.2
 Show how to compute the Bayes decision boundary for the simulation example in Figure 2.5.
 
 
@@ -66,7 +74,9 @@ class BayesianClassifier(object):
         return Y
 ```
 
-**Ex. 2.3**
+
+
+#### Ex. 2.3
 Derive equation (2.24). Consider $N$ data points uniformly distributed in a $p$-dimensional unit ball centered at the origin. Suppose we consider a nearest-neighbor estimate at the origin. The median distance from the origin to the closest data point is given by the expression
 
 $$d(p, N) = (1-(\frac{1}{2})^{1/N})^{1/p}$$.
@@ -100,7 +110,9 @@ F_{Y_\mathrm{min}}(r; N) & = \sum\limits_{i=1}^N {N \choose i} F_Y(r)^i \big( 1-
 > $$ d(p, N) = \text{median}(Y_\mathrm{min})= (1-(\frac{1}{2})^{1/N})^{1/p}$$
 >
 
-**Ex. 2.4**
+
+
+#### Ex. 2.4
 The edge effect problem discussed on page 23 is not peculiar to uniform sampling from bounded domains. Consider inputs drawn from a spherical multinormal distribution $X \sim \mathcal{N}(0, \bm{I}_p)$. The squared distance from any sample point to the origin has a $\chi_p^2$ distribution with mean $p$. Consider a prediction point $x_0$ drawn from this distribution, and let $a = x_0/||x_0||$ be an associated unit vector. Let $z_i = a^\mathrm{T} x_i$ be the projection of each of the training points on this direction.
 
 Show that the $z_i$ are distributed $\mathcal{N}(0, 1)$ with expected squared distance from the origin 1, while the target point has expected squared distance $p$ from the origin. Hence for $p = 10$, a randomly drawn test point is about 3.1 standard deviations from the origin, while all the training points are on average one standard deviation along direction $a$. So most prediction points see themselves as lying on the edge of the training set.
@@ -119,11 +131,11 @@ Show that the $z_i$ are distributed $\mathcal{N}(0, 1)$ with expected squared di
 >
 > Therefore, a random prediction point $x_0$ is about $3.1$ away from the origin, while the mean distance of the other points projected on the direction of $x_0$ reduced to about $0.8$. From the perspective of $x_0$, it sees itself lie on the outer ege of the training set.
 
-**Ex. 2.5**
-(a) Derive equation (2.27). The last line makes use of (3.8) through a
-conditioning argument.
-(b) Derive equation (2.28), making use of the cyclic property of the trace
-operator $[\text{trace}(AB) = \text{trace}(BA)]$, and its linearity (which allows us to interchange the order of trace and expectation).
+
+
+#### Ex. 2.5
+(a) Derive equation (2.27). The last line makes use of (3.8) through a conditioning argument.
+(b) Derive equation (2.28), making use of the cyclic property of the trace operator $[\text{trace}(AB) = \text{trace}(BA)]$, and its linearity (which allows us to interchange the order of trace and expectation).
 
 > **(a)** This is an example to show the bias-variance decomposition of error.
 >
@@ -188,6 +200,86 @@ operator $[\text{trace}(AB) = \text{trace}(BA)]$, and its linearity (which allow
 > $$\begin{aligned} \mathrm{E}_{x_0} [\mathrm{EPE}|\mathcal{T}] & = \mathrm{E}_{x_0} \left[ x_0^\mathrm{T} \mathrm{Cov}[X]^{-1} x_0 \right]\sigma^2/N + \sigma^2 \\ (x_0^\mathrm{T} \mathrm{Cov}[X]^{-1} x_0 \text{ is a scalar)} & = \mathrm{E}_{x_0} \left[ \mathrm{trace}\left[x_0^\mathrm{T} \mathrm{Cov}[X]^{-1} x_0 \right]\right]\sigma^2/N + \sigma^2 \\ \text{(cyclic property of trace)} & = \mathrm{E}_{x_0} \left[ \mathrm{trace}\left[ \mathrm{Cov}[X]^{-1} x_0 x_0^\mathrm{T} \right]\right]\sigma^2/N + \sigma^2 \\ \text{(linearity of trace)} & = \mathrm{trace}\left[ \mathrm{E}_{x_0} \left[ \mathrm{Cov}[X]^{-1} x_0 x_0^\mathrm{T} \right]\right]\sigma^2/N + \sigma^2 \\ \text{(linearitty of E)} & = \mathrm{trace}\left[ \mathrm{Cov}[X]^{-1} \; \mathrm{E}_{x_0} \left[  x_0 x_0^\mathrm{T} \right]\right]\sigma^2/N + \sigma^2  \\ (\mathrm{E}_{x_0}[x_0 x_0^\mathrm{T}] = \mathrm{Cov}[x_0] ) & = \mathrm{trace}\left[ \mathrm{Cov}[X]^{-1} \; \mathrm{Cov}[x_0] \right]\sigma^2/N + \sigma^2 \\ (X, x_0 \text{ from same distribution} ) & = \mathrm{trace}\left[ \bm{I}_d\right]\sigma^2/N + \sigma^2 \\ & = \frac{p}{N} \sigma^2 + \sigma^2  \end{aligned}$$
 >
 > (2.28) proved.
+
+
+#### Ex. 2.6
+Consider a regression problem with inputs $x_i$ and outputs $y_i$, and a parameterized model $f_\theta(x)$ to be fit by least squares. Show that if there are observations with tied or identical values of $x$, then the fit can be obtained from a reduced weighted least squares problem.
+
+>Denote the set of training examples as $\mathbb{X}$, and the reduced set of unique training examples as $\mathbb{X}_u$, and the number of repeated training samples of $x_i$ is denoted as $n_i$. Here note that even $x_i$ are identical, $y_i$ could be different. 
+>
+>The optimization problem is
+>
+>$$\begin{aligned}\theta & = \argmin{\theta}{\sum\limits_{x_i\in \mathbb{X}} (f_\theta(x_i) - y_i)^2} \\ & = \argmin{\theta}{\sum\limits_{x_i \in \mathbb{X}_u} \sum\limits_{j=1}^{n_i} (f_\theta(x_i) - y_{i,j})^2} \\ & = \argmin{\theta}{\sum\limits_{x_i \in \mathbb{X}_u} \sum\limits_{j=1}^{n_i} f_\theta(x_i)^2  - 2 y_{i,j} f_\theta(x_i) + y_{i,j}^2 } \\ (\text{define }\overline{y}_i = \sum\limits_{i=1}^{n_i} y_{i,j}) & = \argmin{\theta}{\sum\limits_{x_i \in \mathbb{X}_u} \left( n_i f_\theta(x_i)^2  - 2 \overline{y}_{i} f_\theta(x_i) + \sum\limits_{j=1}^{n_i} y_{i,j}^2 \right) } \\ & = \argmin{\theta}{\sum\limits_{x_i \in \mathbb{X}_u} \left( n_i \left(f_\theta(x_i)  - \overline{y}_{i} \right)^2 + \sum\limits_{j=1}^{n_i} y_{i,j}^2 - n_i \overline{y}_i^2 \right)} \\ & = \argmin{\theta}{\sum\limits_{x_i \in \mathbb{X}_u} n_i \left(f_\theta(x_i)  - \overline{y}_{i} \right)^2}  \end{aligned}$$
+>So, the original least square problem in $\mathbb{X}$ has been transformed to a weighted least square problem in $\mathbb{X}_u$.
+
+#### Ex. 2.7
+
+Suppose we have a sample of $N$ pairs $x_i, y_i$ drawn i.i.d. from the distribution characterized as follows:
+
+$$\begin{aligned} x_i & \sim h(x), \quad \text{the design density} \\  y_i & = f(x_i) + \epsilon, \quad f \text{ is the regresssion function} \\ \epsilon_i & = (0, \sigma^2) \quad \text{mean zero, variance } \sigma^2 \end{aligned}$$
+
+We construct an estimator for $f$ linear in $y_i$,
+
+$$\hat{f}(x_0) = \sum\limits_{i=1}^{N} l_i (x_0, \mathscr{X}) y_i, $$
+where the weights $l_i(x_0, \mathscr{X})$ do not depend on $y_i$, but do depend on the entire training sequence of $x_i$, denoted as $\mathscr{X}$.
+
+**(a)** Show that linear regression and k-nearest-neighbor regression are members of this class of estimators. Describe explicitly the weights $l_i(x_0, \mathscr{X})$ in each of this class.
+
+> For linear regression, the estimator is $\hat{f}_i(x_0) = x_0^\mathrm{T}\hat{\beta}$, where the normal solution (the bias term has been included in $x_0$ and $\bm{X}$)
+>
+> $$\hat{\beta} = (\bm{X}^\mathrm{T}\bm{X})^{-1} \bm{X}^\mathrm{T} y = \bm{B} y,$$
+> thus
+>
+> $$\begin{aligned} \hat{f}_\theta(x_0) & = x_0^\mathrm{T} \bm{B} y \\ & = \sum\limits_{i=1}^N l_i(x_0, \mathscr{X}) y_i \end{aligned}$$
+>
+> where $l_i = \sum\limits_{k=1}^M x_{0,k}^\mathrm{T}B_{ki}$
+>
+> For k-nearest-neighbor regression, it takes the average of the k-nearest inputs
+>
+> $$\hat{f}_\theta (x_0) = \sum\limits_{i=1}^N l_i(x_0, \mathscr{X})  y_i$$
+>
+> where 
+>
+> $$l_i = \left\{ \begin{array}{ll} 1/k, \quad & \text{if } x_i \in \mathbb{N}_k(x_0) \\ 0, & \text{if } x_i \notin \mathbb{N}_k(x_0) \end{array} \right.$$
+>
+> and $\mathbb{N}_k$ is neighborhood of $x$ defined by k nearest neighbors of $x_0$ 
+
+**(b)** Decompose the conditional mean-squared error
+
+$$\Ep{\mathscr{Y}|\mathscr{X}}{(f(x_0) - \hat{f}(x_0))^2}$$
+
+into conditional squared bias and a conditional variance component. Like $\mathscr{X} ,\mathscr{Y}$ represents the entire training sequence of $y_i$.
+
+>Given the training input $\mathscr{X}$, the trained model function $\hat{f}$ is dependent on the training labels $\mathscr{Y}$. To do decomposition, we add a $\Ep{\mathscr{Y}|\mathscr{X}}{\hat{f}(x_0)}$ term, which represents the prediction of $f(x_0)$ averaged over all the training labels. So,
+>
+>$$\begin{aligned} \Ep{\mathscr{Y}|\mathscr{X}}{(f(x_0) - \hat{f}(x_0))^2} & = \Ep{\mathscr{Y}|\mathscr{X}}{(f(x_0) - \Ep{\mathscr{Y}|\mathscr{X}}{\hat{f}(x_0)} + \Ep{\mathscr{Y}|\mathscr{X}}{\hat{f}(x_0)} - \hat{f}(x_0))^2}\\ & = \Ep{\mathscr{Y}|\mathscr{X}}{\left(f(x_0) - \Ep{\mathscr{Y}|\mathscr{X}}{\hat{f}(x_0)}\right)^2} + \Ep{\mathscr{Y}|\mathscr{X}}{\left(\Ep{\mathscr{Y}|\mathscr{X}}{\hat{f}(x_0)} - \hat{f}(x_0)\right)^2} \\ & = \left(f(x_0) - \Ep{\mathscr{Y}|\mathscr{X}}{\hat{f}(x_0)}\right)^2 + \Ep{\mathscr{Y}|\mathscr{X}}{\left(\Ep{\mathscr{Y}|\mathscr{X}}{\hat{f}(x_0)} - \hat{f}(x_0)\right)^2} \\ & = \mathrm{Bias}^2_{\mathscr{Y}|\mathscr{X}}[\hat{f}(x_0)] + \mathrm{Var}_{\mathscr{Y}|\mathscr{X}}[\hat{f}(x_0)] \end{aligned}$$
+
+**(c)** Decompose the (unconditional) mean-squared error
+
+$$\Ep{\mathscr{Y}, \mathscr{X}}{(f(x_0) - \hat{f}(x_0))^2}$$
+
+into a squared bias and a variance component.
+
+>Similar to (b), Instead of $\Ep{\mathscr{Y}|\mathscr{X}}{\hat{f}(x_0)}$, we add $\Ep{\mathscr{Y}, \mathscr{X}}{\hat{f}(x_0)}$ for decomposition, and thus
+>
+>$$\begin{aligned} \Ep{\mathscr{Y}, \mathscr{X}}{(f(x_0) - \hat{f}(x_0))^2} & = \left(f(x_0) - \Ep{\mathscr{Y},\mathscr{X}}{\hat{f}(x_0)}\right)^2 + \Ep{\mathscr{Y}, \mathscr{X}}{\left(\Ep{\mathscr{Y}, \mathscr{X}}{\hat{f}(x_0)} - \hat{f}(x_0)\right)^2} \\ & = \mathrm{Bias}^2_{\mathscr{Y}, \mathscr{X}}[\hat{f}(x_0)] + \mathrm{Var}_{\mathscr{Y}, \mathscr{X}}[\hat{f}(x_0)] \end{aligned}$$
+
+**(d)** Establish a relationship between the squared biases and variances in the above two cases.
+
+>In (b), we can further simplify the bias and variance term using the constructed estimator. The essential term
+>
+>$$\Ep{\mathscr{Y}|\mathscr{X}}{\hat{f}(x_0)} = \Ep{\mathscr{Y}|\mathscr{X}}{\sum\limits_{i=1}^N l_i\, y_i} = \sum\limits_{i=1}^N \Ep{\mathscr{Y}|\mathscr{X}}{ l_i\, y_i} = \sum\limits_{i=1}^N l_i f(x_i) $$
+>
+>so that
+>
+>$$\begin{aligned} \mathrm{Bias}_{\mathscr{Y|\mathscr{X}}} & = f(x_0) - \sum\limits_{i=1}^N l_i f(x_i) \\ \mathrm{Var}_{\mathscr{Y|\mathscr{X}}} & = \Ep{\mathscr{Y}|\mathscr{X}}{\left(\sum\limits_{i=1}^N l_i \epsilon \right)^2} = \sigma^2 \left(\sum\limits_{i=1}^N l_i\right)^2\end{aligned} $$
+>
+>The corresponding term is obtained by taking a further average over $\mathscr{X}$, i.e.,
+>
+>$$\begin{aligned} \mathrm{Bias}^2_{\mathscr{Y, \mathscr{X}}} & = \Ep{\mathscr{X}}{\mathrm{Bias}^2_{\mathscr{Y|\mathscr{X}}}} = \Ep{\mathscr{X}}{\left(f(x_0) - \sum\limits_{i=1}^N l_i(x_0; \mathscr{X}) f(x_i)\right)^2} \\ \mathrm{Var}_{\mathscr{Y,\mathscr{X}}} & = \Ep{\mathscr{X}}{\mathrm{Var}_{\mathscr{Y|\mathscr{X}}}} = \Ep{\mathscr{X}}{ \left(\sum\limits_{i=1}^N l_i(x_;\mathscr{X}) \right)^2} \sigma^2 \end{aligned} $$
+
+
+
 
 [^1]: https://en.wikipedia.org/wiki/Volume_of_an_n-ball
 [^2]: https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Affine_transformation

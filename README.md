@@ -1,4 +1,5 @@
-# Python Implementation and Exercise Solution of "The Elements of Statistical Learning" by Trevor Hastie, Robert Tibshirani, Jerome Friedman (2nd Ed.)
+# Python for EPL
+**Python Implementation and Exercise Solution of "The Elements of Statistical Learning" by _Trevor Hastie, Robert Tibshirani, Jerome Friedman_ (2nd Ed.)**
 
 ## Outline
 ### Chapter 2 --  Overview of Supervised Learning
