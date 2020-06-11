@@ -3,7 +3,7 @@ Binary Classification by Linear Regression and K-Nearest-Neighbor
 in Chapter 2 of The Elements of Statistical Learning
 
 author: zl
-update: 20200606
+update: 2020/06/06
 """
 
 #%% import

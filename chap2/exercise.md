@@ -278,6 +278,40 @@ into a squared bias and a variance component.
 >
 >$$\begin{aligned} \mathrm{Bias}^2_{\mathscr{Y, \mathscr{X}}} & = \Ep{\mathscr{X}}{\mathrm{Bias}^2_{\mathscr{Y|\mathscr{X}}}} = \Ep{\mathscr{X}}{\left(f(x_0) - \sum\limits_{i=1}^N l_i(x_0; \mathscr{X}) f(x_i)\right)^2} \\ \mathrm{Var}_{\mathscr{Y,\mathscr{X}}} & = \Ep{\mathscr{X}}{\mathrm{Var}_{\mathscr{Y|\mathscr{X}}}} = \Ep{\mathscr{X}}{ \left(\sum\limits_{i=1}^N l_i(x_;\mathscr{X}) \right)^2} \sigma^2 \end{aligned} $$
 
+#### Ex. 2.8
+
+Compare the classification performance of linear regression and $k$–nearest neighbor classification on the zipcode data. In particular, consider only the 2’s and 3’s, and $k = 1, 3, 5, 7$ and $15$. Show both the training and test error for each choice. The zipcode data are available from the book website www-stat.stanford.edu/ElemStatLearn.
+
+
+
+#### E.x 2.9
+
+Consider a linear regression model with $p$ parameters, fit by least squares to a set of training data $(x_1, y_1), \cdots,(x_N, y_N)$ drawn at random from a population. Let $\hat{\beta}$ be the least squares estimate. Suppose we have some test data $(\tilde{x}_1, \tilde{y}_1), \cdots, (\tilde{x}_M, \tilde{y}_M$) drawn at random from the same population as the training data. If $R_{tr}(\beta) = \frac{1}{N} \sum_1^N (y_i − \beta^T x_i)^2$ and $R_{te} (\beta) = \frac{1}{M} \sum_1^M  (\tilde{y}_i − \beta^T \tilde{x}_i)^2$ , prove that 
+
+$$\Ep{}{R_{tr}(\hat{\beta})} \leq \Ep{}{R_{te}(\hat{\beta})}, $$
+
+where the expectations are over all that is random in each expression.
+
+> The expectation over all random variables including number of samples, i.e., $N$ for training set, $M$ for test set, and the coressponding samples $(x_i, y_i)$ and $(\tilde{x}_i, \tilde{y}_i)$, So
+>
+> $$\begin{aligned} \Ep{}{R_{tr}(\hat{\beta})} & = \Ep{N, \bm{X}_{tr}, \bm{Y}_{tr}}{R_{tr}(\hat{\beta})} \\ \Ep{}{R_{te}(\hat{\beta})} & = \Ep{M, \bm{X}_{te}, \bm{Y}_{te}}{\Ep{N, \bm{X}_{tr}, \bm{Y}_{tr}|M, \bm{X}_{te}, \bm{Y}_{te}}{R_{te}(\hat{\beta})}}  = \Ep{M, \bm{X}_{te}, \bm{Y}_{te}}{R_{te}\left( \Ep{N, \bm{X}_{tr}, \bm{Y}_{tr}|M, \bm{X}_{te}, \bm{Y}_{te}}{\hat{\beta}} \right)}\end{aligned}$$ 
+>
+> Let us define $\tilde{\beta}$ as the least squars estimate using the test data, i.e., 
+>
+> $$\tilde{\beta} = \argmin{\beta}{R_{te}}.$$
+>
+> By definition, $R_{te}(\tilde{\beta}) \leq R_{te}\left( \Ep{N, \bm{X}_{tr}, \bm{Y}_{tr}|M, \bm{X}_{te}, \bm{Y}_{te}}{\hat{\beta}} \right)$. Furthermore, note that the expectation over the training data and the test data are equivalent, 
+>
+> $$\Ep{N, \bm{X}_{tr}, \bm{Y}_{tr}}{R_{tr}(\hat{\beta})} = \Ep{M, \bm{X}_{te}, \bm{Y}_{te}}{R_{tr}(\tilde{\beta})},$$
+>
+> so
+>
+> $$\Ep{N, \bm{X}_{tr}, \bm{Y}_{tr}}{R_{tr}(\hat{\beta})} \leq  \Ep{M, \bm{X}_{te}, \bm{Y}_{te}}{R_{te}\left( \Ep{N, \bm{X}_{tr}, \bm{Y}_{tr}|M, \bm{X}_{te}, \bm{Y}_{te}}{\hat{\beta}} \right)},$$
+>
+> i.e.,
+>
+> $$\Ep{}{R_{tr}(\hat{\beta})} \leq \Ep{}{R_{te}(\hat{\beta})}$$
+
 
 
 
