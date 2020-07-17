@@ -3,6 +3,7 @@ Simulation for Exercise 3.2
 """
 
 #%%
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm, chi2
@@ -11,11 +12,17 @@ from tabulate import tabulate
 plt.style.use('../utils/default_plot_style.mplstyle')
 np.set_printoptions(precision=3)
 
+SAVE_FIGURE = True
+DPI = 300
+DIR_FIGURE = '../figure'
+CHAPTER = 'ch3'
+PROBLEM = 'Ex_32'
+
 #%% generate random sample
 np.random.seed(42)
 
 # set params
-beta = np.array([1, 0.4, 0.5, 0.2])
+beta = np.array([1, 0.4, 0.5, 0.2])  # low --> high order
 sigma = 1
 N = 100
 
@@ -91,3 +98,6 @@ ax.set_ylabel('Y')
 ax.legend(handles=(h1, h2[0], h3, h4[0]), loc='best')
 plt.show()
 
+if SAVE_FIGURE == True:
+    fn = os.path.join(DIR_FIGURE, '_'.join([CHAPTER, PROBLEM]))
+    plt.savefig(fn, dpi=DPI)

@@ -145,7 +145,7 @@ Show that the $z_i$ are distributed $\mathcal{N}(0, 1)$ with expected squared di
 >
 > $$\mathrm{EPE}(x_0) = \mathrm{E}_{y_0|x_0}\left[ \mathrm{E}_\mathcal{T} \left[ (y_0 - \hat{y}_0)^2\right]\right].$$
 >
-> Notice that the expectation of of training set $\mathcal{T}$ includes two random subprocesses (1) generate random training input $\boldsymbol{X}$, (2) generate random noise $\epsilon$. To avoid ambituity, we use $\mathcal{T}_X$ to represent the first one and $\mathcal{T}_\epsilon$ the second one. By $\mathrm{E}_\mathcal{T}[f(\boldsymbol{X}, \epsilon)]$, we mean $\mathrm{E}_{\mathrm{T}_\boldsymbol{X}}[\mathrm{E}_{\mathcal{T}_\epsilon}[f(\boldsymbol{X},\epsilon)|\boldsymbol{X}]].$
+> Notice that the expectation of of training set $\mathcal{T}$ includes two random subprocesses (1) generate random training input $\boldsymbol{X}$, (2) generate random noise $\epsilon$. To avoid ambituity, we use $\mathcal{T}_X$ to represent the first one and $\mathcal{T}_\epsilon$ the second one. By $\mathrm{E}_\mathcal{T}[f(\boldsymbol{X}, \epsilon)]$, we mean $\mathrm{E}_{\mathcal{T}_\boldsymbol{X}}[\mathrm{E}_{\mathcal{T}_\epsilon}[f(\boldsymbol{X},\epsilon)|\boldsymbol{X}]].$
 >
 > The inner expectation w.r.t. the training $\mathcal{T}$ has no influence on $y_0$, i.e., $\mathrm{E}_\mathcal{T}\left[y_0\right] = y_0$, thus
 >
@@ -153,7 +153,7 @@ Show that the $z_i$ are distributed $\mathcal{N}(0, 1)$ with expected squared di
 >
 > Further,
 >
-> $$\begin{aligned}\mathrm{E}_\mathcal{T}\left[\hat{y}_0^2\right] & = \mathrm{E}_\mathcal{T}\left[(\hat{y}_0 - \mathrm{E}_\mathcal{T}[\hat{y}_0] + \mathrm{E}_\mathcal{T}^2[\hat{y}_0])\right] \\ \text{(crossed term is 0)} & = \mathrm{E}_\mathcal{T}[(\hat{y}_0 - \mathrm{E}_\mathcal{T}[\hat{y}_0])^2] + \mathrm{E}_\mathcal{T}^2[\hat{y}_0] \\ & = \mathrm{Var}_\mathcal{T} \left[\hat{y}_0 \right] + \mathrm{E}_\mathcal{T}^2 [\hat{y}_0] \end{aligned}$$
+> $$\begin{aligned}\mathrm{E}_\mathcal{T}\left[\hat{y}_0^2\right] & = \mathrm{E}_\mathcal{T}\left[(\hat{y}_0 - \mathrm{E}_\mathcal{T}[\hat{y}_0] + \mathrm{E}_\mathcal{T}^2[\hat{y}_0])^2\right] \\ \text{(crossed term is 0)} & = \mathrm{E}_\mathcal{T}[(\hat{y}_0 - \mathrm{E}_\mathcal{T}[\hat{y}_0])^2] + \mathrm{E}_\mathcal{T}^2[\hat{y}_0] \\ & = \mathrm{Var}_\mathcal{T} \left[\hat{y}_0 \right] + \mathrm{E}_\mathcal{T}^2 [\hat{y}_0] \end{aligned}$$
 >
 > Similarly,
 >
@@ -191,7 +191,7 @@ Show that the $z_i$ are distributed $\mathcal{N}(0, 1)$ with expected squared di
 > The covariance of a $d$-dimensional random vector $X$ is
 >
 > $$\mathrm{Cov}[X] = \mathrm{E}[X X^\mathrm{T}] - \mathrm{E}[X]\, \mathrm{E}[X]^\mathrm{T} = \mathrm{E}[X X^\mathrm{T}],$$
-> where $\mathrm{E}[X] = 0$. When $N$ is large, $\mathrm{E}[X X^\mathrm{T}]$ can be approximated by $\bm{X}^\mathrm{X} \bm{X}/N$ ($\bm{X}$ is input matrix with each row for a data point), thus
+> where $\mathrm{E}[X] = 0$. When $N$ is large, $\mathrm{E}[X X^\mathrm{T}]$ can be approximated by $\bm{X}^T \bm{X}/N$ ($\bm{X}$ is input matrix with each row for a data point), thus
 >
 > $$\bm{X}^\mathrm{T}\bm{X} \approx N \mathrm{Cov}[X].$$
 >
