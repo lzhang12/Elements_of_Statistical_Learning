@@ -1,5 +1,7 @@
 """
-Dimension Reduction and Classification of Vowel Data using Linear Discriminant Analysis
+Classification of Vowel Data using Quadratic Discriminant Analysis
+
+For visualization, we first reduce the dimension to 2 canonical variates, and then perrform QDA for the transformed data.
 """
 
 #%%
@@ -13,11 +15,11 @@ from matplotlib.colors import ListedColormap
 plt.style.use('../utils/default_plot_style.mplstyle')
 np.set_printoptions(precision=3)
 
-SAVE_FIGURE = True
+SAVE_FIGURE = False
 DPI = 300
 DIR_FIGURE = '../figure'
 CHAPTER = 'ch4'
-PROBLEM = 'vowel_data_LDA'
+PROBLEM = 'vowel_data_QDA'
 
 #%% Vowel data
 train = pd.read_csv('../data/vowel_train.csv')
@@ -64,52 +66,28 @@ V = V[:, np.argsort(D)[::-1]]
 Z = np.dot(X, V)
 Zm = np.dot(M, V)
 
-# Projection onto paris of canonical variates
-# coordinate starts from 0, while in the book it starts from 1
-coords = [0,6]
-
-# colormap
-cm = palettable.cartocolors.qualitative.Bold_10.mpl_colormap
-c_sample = [cm(i/11) for i in y]
-c_class = [cm(i/11) for i in classes]
-
-# diiscriminant variable
-fig, ax = plt.subplots(1, 1,figsize=(7,7))
-ax.scatter(Z[:,coords[0]], Z[:,coords[1]], s=20, facecolors='None', edgecolors=c_sample, zorder=3)
-ax.scatter(Zm[:,coords[0]], Zm[:,coords[1]], s=200, facecolors=c_class, zorder=1)
-ax.set_title('Z')
-ax.set_xlabel('coordinate '+str(coords[0]))
-ax.set_ylabel('coordinate '+str(coords[1]))
-
 #%% # Decision boundary on the first two canonical variates
 coords = [0,1]
 
 # common variance
 Zr = Z[:, coords]
-Mr = np.zeros((K, 2))
-Wr = np.zeros((2, 2))
-for i, k in enumerate(classes):
-    Mr[i,:] = np.mean(Zr[y==k,:], axis=0)
-    Zrk = Zr[y==k, :] - Mr[i,:]
-    Wr += np.dot(Zrk.T, Zrk)
-
-Sigmah = Wr/(N-K)
-Sigmah_inv = np.linalg.inv(Sigmah)
-# D, V = np.linalg.eig(Sigmah)
-# Zr_norm = np.dot(Zr, np.dot(V, np.diag(1/np.sqrt(D))))
 
 # generate mesh
 xmin, xmax = (-2, 2)
 ymin, ymax = (-2, 1.5)
-n_point = 1000
+n_point = 500
 xx, yy = np.meshgrid(np.linspace(xmin, xmax, n_point), np.linspace(ymin, ymax, n_point))
 X_mesh = np.c_[xx.ravel(), yy.ravel()]
 
-# linear discriminant function
+# quadratic discriminant function
 delta = np.zeros((n_point*n_point, K))
 for i, k in enumerate(classes):
-    muk = Mr[i,:]
-    delta[:,i] = np.dot(X_mesh, np.dot(Sigmah_inv, muk)) - 1/2.*np.dot(muk.T, np.dot(Sigmah_inv, muk))
+    Zk = Zr[y==k,:]
+    muk = np.mean(Zk, axis=0)
+    sigmak = np.dot((Zk-muk).T, Zk-muk)/(counts[i])
+    det = np.linalg.det(sigmak)
+    inv = np.linalg.inv(sigmak)
+    delta[:,i] = -1/2.*np.log(det) - 1/2.*np.sum((X_mesh-muk)*np.dot(inv, (X_mesh-muk).T).T, axis=1)
 
 delta = delta.reshape((n_point, n_point, K))
 delta = np.argmax(delta, axis=-1)
@@ -133,3 +111,5 @@ if SAVE_FIGURE == True:
     plt.savefig(fn, dpi=DPI)
 else:
     plt.show()
+
+# %%
