@@ -38,7 +38,7 @@ spline_base = lambda x, xi, k: (x>xi)*(x-xi)**k
 spline = lambda x, xi: np.concatenate((np.column_stack([x**i for i in range(M)]), np.column_stack([spline_base(x, xi_, M-1) for xi_ in xi])), axis=1)
 
 H = spline(Xd, xi)
-beta = np.linalg.inv(H.T@H)@H.T@Yd# linear regression coefficient
+beta = np.linalg.inv(H.T@H)@H.T@Yd  # linear regression coefficient
 Xfit = np.linspace(0,1,200)
 Hfit = spline(Xfit, xi)
 Yfit = np.dot(Hfit, beta)
@@ -50,7 +50,7 @@ natural_spline_base = lambda x, xi: [df(x, xi_, xi[-1]) - df(x, xi[-2], xi[-1]) 
 natural_spline = lambda x, xi: np.concatenate((np.column_stack([x**i for i in range(2)]), np.column_stack(natural_spline_base(x, xi_bnd))), axis=1)
 
 H_nat = natural_spline(Xd, xi)
-beta_nat = np.linalg.inv(H_nat.T@H_nat)@H_nat.T@Yd# linear regression coefficient
+beta_nat = np.linalg.inv(H_nat.T@H_nat)@H_nat.T@Yd  # linear regression coefficient
 Hfit_nat = natural_spline(Xfit, xi)
 Yfit_nat = np.dot(Hfit_nat, beta_nat)
 
