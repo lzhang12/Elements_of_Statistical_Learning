@@ -100,4 +100,6 @@ plt.show()
 
 if SAVE_FIGURE == True:
     fn = os.path.join(DIR_FIGURE, '_'.join([CHAPTER, PROBLEM]))
-    plt.savefig(fn, dpi=DPI)
+    fig.savefig(fn, dpi=DPI)
+
+# %%
