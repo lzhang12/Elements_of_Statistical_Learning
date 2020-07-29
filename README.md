@@ -9,8 +9,8 @@
 
 
 ### Chap 3 -- Linear Methods for Regression
-- [] `Least_Angle_Regression.py`
-- [] `Linear_Regression_prostate_cancer.py`
+- [ ] `Least_Angle_Regression.py`
+- [ ] `Linear_Regression_prostate_cancer.py`
 - `ex3_2.py`
   - Simulation for exercise 3.2
 - `ex3.md`
